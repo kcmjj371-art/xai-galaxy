@@ -415,11 +415,11 @@ for(let k=0;k<600;k++)dust.push({r:rnd()*1250,a:rnd()*6.283,s:rnd()*1.1+.2,o:rnd
 /* ================= 상태 ================= */
 const cv=document.getElementById("sky"),ctx=cv.getContext("2d");
 let W=0,H=0,DPR=1,view={x:0,y:0,k:.5},sel=null,hov=null,rot=0,spin=0,T=0,moving=false,fly=null,shoot=null,spinHome=false;
-let lineOn=true;const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=0});
+let lineOn=false;const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=1});
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let pcol=false;const panelW=()=>innerWidth>760?(pcol?40:366):0,mob=()=>innerWidth<=760;
 const hdBottom=()=>document.getElementById("hd").getBoundingClientRect().bottom;
-let wide=false;function fitAll(){const pw=panelW(),top=hdBottom()+4,ah=(mob()?H-84:H-16)-top,aw=W-pw-24;const k=Math.max(.16,Math.min(aw,ah)/(wide?2250:(mob()?1500:1400)));return {k,x:(W-pw)/2,y:top+ah/2}}
+let wide=false;function fitAll(){const pw=panelW(),top=hdBottom()+4,ah=(mob()?H-84:H-16)-top,aw=W-pw-24;const k=Math.max(.16,Math.min(aw,ah)/(wide?2250:(mob()?1750:1850)));return {k,x:(W-pw)/2,y:top+ah/2}}
 function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
 const rotW=(x,y)=>{const c=Math.cos(spin),s=Math.sin(spin);return [x*c-y*s,x*s+y*c]};
 const toS=(x,y)=>{const [a,b]=rotW(x,y);return [view.x+a*view.k,view.y+b*view.k]};
@@ -734,7 +734,7 @@ function wrap(html,title,sub){P.classList.remove("open");
   P.innerHTML=`<div class="mini"><span><b>${title}</b><small>${sub}</small></span><button class="more" data-tog>자세히 보기</button><button class="less" data-tog>접기</button></div><div class="full">${html}</div>`;P.scrollTop=0}
 function overview(){const subs=N.filter(n=>n.kind==="sub"),gaps=subs.filter(n=>n.ext===0),cnt={c:0,i:0,p:0,x:0};E.forEach(e=>{if(cnt[e.t]!=null)cnt[e.t]++});
   wrap(`<div class="kind">관계도 안내</div><h2>X-AI 역량과 정규교육과정</h2>
-  <p>다섯 역량군이 각각 하나의 별자리를 이룹니다. 밝은 별은 세부역량 23개, 별자리 둘레의 작은 별은 하위능력 74개입니다. 바깥에는 2022 개정 교육과정·NCS·국가기술자격·기계 직무 사례 등의 연계 요소가 연결된 역량 가까이에 놓여 있습니다. 처음에는 역량만 밝게 보이고 연결선은 꺼져 있습니다. 위쪽 ‘연결 켜기’에서 자료를 켜면 그 자료와의 연결선이 나타나며, 역량 별을 눌러도 켜 둔 자료와의 연결만 보입니다. 연계 요소 별을 직접 누르면 그 별의 연결이 보입니다.</p>
+  <p>다섯 역량군이 각각 하나의 별자리를 이룹니다. 밝은 별은 세부역량 23개, 별자리 둘레의 작은 별은 하위능력 74개입니다. 바깥에는 2022 개정 교육과정·NCS·국가기술자격·기계 직무 사례 등의 연계 요소가 연결된 역량 가까이에 놓여 있습니다. 처음에는 모든 자료가 켜져 있고 연결선은 꺼져 있습니다. ‘선 켜기’를 누르면 연결선이 나타나고, 위쪽 ‘연결 켜기’에서 자료를 골라 켜고 끌 수 있으며, 역량 별을 누르면 켜 둔 자료와의 연결만 보입니다. 연계 요소 별을 직접 누르면 그 별의 연결이 보입니다.</p>
   <h3>은하 구성</h3><div class="figs"><button data-go="CORE"><span class="dot" style="background:var(--gold)"></span><span>X-AI 역량(AI 협업역량)<br><small>이 은하의 중심 · 정의·구성·용어</small></span></button><button data-go="XAI"><span class="dot" style="background:#aaf0ff"></span><span>설명 가능한 인공지능(XAI)<br><small>X-AI와 다른 개념 · 바깥의 비교 은하</small></span></button></div>
   <h3>X-AI 역량군 · 5</h3><div class="figs">${GROUPS.map(g=>`<button data-go="${g.id}">${swatch(g)}<span>${g.n}<br><small>${g.fig} · 세부 ${g.subs.length} · 하위 ${g.subs.reduce((s,x)=>s+x.lows.length,0)}</small></span></button>`).join("")}</div>
   <h3>연결 근거 구분</h3><div class="legend">
@@ -850,13 +850,13 @@ const CGRP=[["교육과정·NCS",["K1","K2","K3","K4","K5","K6","K7"]],["국가�
 const CROW={};CGRP.forEach(([nm,ids])=>{const r=document.createElement("div");r.className="crow";r.innerHTML=`<span class="tlab">${nm}</span>`;CL.appendChild(r);ids.forEach(i=>CROW[i]=r)});
 CLUSTERS.forEach(c=>{const b=document.createElement("button");b.className="chip";b.setAttribute("aria-pressed","true");b.id="f-"+c.id;
   b.innerHTML=`<span class="dot" style="background:${c.c}"></span>${esc(c.n)}`;
-  b.setAttribute("aria-pressed","false");b.title="눌러서 이 자료와 역량의 연결선을 켜고 끕니다";
+  b.setAttribute("aria-pressed",act[c.id]?"true":"false");b.title="눌러서 이 자료와 역량의 연결선을 켜고 끕니다";
   b.onclick=()=>{act[c.id]=act[c.id]?0:1;b.setAttribute("aria-pressed",act[c.id]?"true":"false");show(sel)};(CROW[c.id]||CL).appendChild(b)});
 {const lb=document.createElement("span");lb.className="tlab";lb.textContent="연결 켜기";CL.prepend(lb);
  const all=document.createElement("button");all.className="chip";all.textContent="모두 끄기";all.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=0;document.getElementById("f-"+c.id).setAttribute("aria-pressed","false")});show(sel)};const on=document.createElement("button");on.className="chip";on.textContent="모두 켜기";on.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=1;document.getElementById("f-"+c.id).setAttribute("aria-pressed","true")});show(sel)};
  const cr=document.createElement("div");cr.className="crow";cr.innerHTML='<span class="tlab">전체</span>';cr.appendChild(on);cr.appendChild(all);
  const l1=document.createElement("button"),l0=document.createElement("button");l1.className=l0.className="chip";l1.id="lnOn";l0.id="lnOff";l1.textContent="선 켜기";l0.textContent="선 끄기";l1.title="연결선을 보입니다";l0.title="별은 그대로 두고 연결선만 숨깁니다";
- const lset=v=>{lineOn=v;l1.setAttribute("aria-pressed",v?"true":"false");l0.setAttribute("aria-pressed",v?"false":"true")};l1.onclick=()=>lset(true);l0.onclick=()=>lset(false);lset(true);
+ const lset=v=>{lineOn=v;l1.setAttribute("aria-pressed",v?"true":"false");l0.setAttribute("aria-pressed",v?"false":"true")};l1.onclick=()=>lset(true);l0.onclick=()=>lset(false);lset(false);
  cr.appendChild(l1);cr.appendChild(l0);CL.appendChild(cr)}
 const EVB=document.getElementById("evs");
 ["c","i","p","x"].forEach(t=>{const b=document.createElement("button");b.className="chip";b.setAttribute("aria-pressed","true");b.title=EVD[t];
