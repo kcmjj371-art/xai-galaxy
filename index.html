@@ -116,7 +116,7 @@ ul.plain li{margin:3px 0}
 </header>
 <aside id="panel" aria-live="polite"></aside><button id="ptog" aria-expanded="true" title="설명 접기">›</button>
 <div class="zoom">
-  <button id="zin" aria-label="확대">＋</button><button id="zout" aria-label="축소">－</button><button id="zfit">전체</button><button id="zmove">움직임 끄기</button>
+  <button id="zin" aria-label="확대">＋</button><button id="zout" aria-label="축소">－</button><button id="zfit">전체</button><button id="zmove">움직임 켜기</button>
 </div>
 
 <script>
@@ -414,8 +414,8 @@ for(let k=0;k<600;k++)dust.push({r:rnd()*1250,a:rnd()*6.283,s:rnd()*1.1+.2,o:rnd
 
 /* ================= 상태 ================= */
 const cv=document.getElementById("sky"),ctx=cv.getContext("2d");
-let W=0,H=0,DPR=1,view={x:0,y:0,k:.5},sel=null,hov=null,rot=0,spin=0,T=0,moving=true,fly=null,shoot=null,spinHome=false;
-const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=0});
+let W=0,H=0,DPR=1,view={x:0,y:0,k:.5},sel=null,hov=null,rot=0,spin=0,T=0,moving=false,fly=null,shoot=null,spinHome=false;
+let lineOn=true;const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=0});
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let pcol=false;const panelW=()=>innerWidth>760?(pcol?40:366):0,mob=()=>innerWidth<=760;
 const hdBottom=()=>document.getElementById("hd").getBoundingClientRect().bottom;
@@ -637,7 +637,7 @@ function draw(){
   // 간선
   if(false){if(!AGG)buildAgg();for(const g of AGG){if(!vis[g.cl])continue;const H=byId[g.cl],T2=byId[g.to];const [x1,y1]=toS(H.x,H.y),[x2,y2]=toS(T2.x,T2.y),[qx,qy]=toS((H.x+T2.x)/2*.72,(H.y+T2.y)/2*.72);
     ctx.beginPath();ctx.moveTo(x1,y1);ctx.quadraticCurveTo(qx,qy,x2,y2);ctx.setLineDash([]);ctx.strokeStyle=rgba(H.rgb,.07+Math.min(.16,g.n*.012));ctx.lineWidth=Math.min(2.6,.6+g.n*.08);ctx.stroke()}}
-  for(const e of E){if(!edgeVisible(e))continue;
+  for(const e of E){if(!lineOn||!edgeVisible(e))continue;
     if(e.t==="s"&&e.A.kind==="hub"&&!(F&&F.has(e.a)&&F.has(e.b))&&!act[e.A.cl])continue;
     const acl=(e.A.cl&&act[e.A.cl])||(e.B.cl&&act[e.B.cl]);
     if(!F&&e.t!=="s"&&!acl)continue;
@@ -672,13 +672,13 @@ function draw(){
     const always=["core","group","base","hub","xai"].includes(kind);
     const show=always||(F?F.has(n.id):(kind==="sub"?kz>.6:kind==="item"?(act[n.cl]&&kz>.85):kind==="xaip"?kz>.5:kz>1.9));if(!show)continue;
     if(F&&!F.has(n.id)&&!["core","group","hub","xai"].includes(kind))continue;
-    const dim=F?!F.has(n.id):(kind==="hub"&&!act[n.cl]),fs={core:16,group:15,hub:13,base:12,sub:11.5,item:11.5,low:10.5,xai:14,xaip:11.5}[kind];
+    const dim=F?!F.has(n.id):(kind==="hub"&&!act[n.cl]),fs={core:16,group:17,hub:13,base:12,sub:11.5,item:11.5,low:10.5,xai:14,xaip:11.5}[kind];
     ctx.font=`${["core","group","hub"].includes(kind)?700:kind==="sub"?600:kind==="low"?400:500} ${fs}px ${css("--sans")}`;
     let t=n.label;if(kind==="item")t=t.replace(/ \([^()]*\d{4}\.\d+\)$/,"");if(kind==="group")t=n.id+" "+n.label;if(kind==="sub")t=n.id+" "+n.label;
     const w=ctx.measureText(t).width;let lx,ly=n.sy,al;
     if(kind==="core"){al="center";lx=n.sx;ly=n.sy+n.sr+16}
     else if(kind==="xai"){al="center";lx=n.sx;ly=n.sy+n.sr+18}
-    else if(kind==="group"){al="center";lx=n.sx;ly=n.sy-n.sr-14}
+    else if(kind==="group"){al="center";const gg=GROUPS.find(x=>x.id===n.id),P=figP(gg),b=gg.bb,cs=[P(b[0],b[1]),P(b[2],b[1]),P(b[0],b[3]),P(b[2],b[3])];lx=P(0,0)[0];ly=Math.min(...cs.map(q=>q[1]))-12}
     else{const ref=kind==="low"?byId[n.parent]:kind==="sub"?byId[n.grp]:{sx:cx,sy:cy};const right=n.sx>=ref.sx;al=right?"left":"right";lx=n.sx+(right?n.sr+6:-(n.sr+6))}
     let bx=al==="center"?lx-w/2:al==="left"?lx:lx-w;
     if(bx<4){lx+=4-bx;bx=4}else if(bx+w>W-panelW()-4&&n.sx<W-panelW()){const sh=bx+w-(W-panelW()-4);lx-=sh;bx-=sh}
@@ -854,7 +854,10 @@ CLUSTERS.forEach(c=>{const b=document.createElement("button");b.className="chip"
   b.onclick=()=>{act[c.id]=act[c.id]?0:1;b.setAttribute("aria-pressed",act[c.id]?"true":"false");show(sel)};(CROW[c.id]||CL).appendChild(b)});
 {const lb=document.createElement("span");lb.className="tlab";lb.textContent="연결 켜기";CL.prepend(lb);
  const all=document.createElement("button");all.className="chip";all.textContent="모두 끄기";all.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=0;document.getElementById("f-"+c.id).setAttribute("aria-pressed","false")});show(sel)};const on=document.createElement("button");on.className="chip";on.textContent="모두 켜기";on.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=1;document.getElementById("f-"+c.id).setAttribute("aria-pressed","true")});show(sel)};
- const cr=document.createElement("div");cr.className="crow";cr.innerHTML='<span class="tlab">전체</span>';cr.appendChild(on);cr.appendChild(all);CL.appendChild(cr)}
+ const cr=document.createElement("div");cr.className="crow";cr.innerHTML='<span class="tlab">전체</span>';cr.appendChild(on);cr.appendChild(all);
+ const l1=document.createElement("button"),l0=document.createElement("button");l1.className=l0.className="chip";l1.id="lnOn";l0.id="lnOff";l1.textContent="선 켜기";l0.textContent="선 끄기";l1.title="연결선을 보입니다";l0.title="별은 그대로 두고 연결선만 숨깁니다";
+ const lset=v=>{lineOn=v;l1.setAttribute("aria-pressed",v?"true":"false");l0.setAttribute("aria-pressed",v?"false":"true")};l1.onclick=()=>lset(true);l0.onclick=()=>lset(false);lset(true);
+ cr.appendChild(l1);cr.appendChild(l0);CL.appendChild(cr)}
 const EVB=document.getElementById("evs");
 ["c","i","p","x"].forEach(t=>{const b=document.createElement("button");b.className="chip";b.setAttribute("aria-pressed","true");b.title=EVD[t];
   b.innerHTML=`<span class="ev ev-${t}" style="padding:1px 6px">${EVN[t]}</span>`;b.onclick=()=>{evOn[t]=evOn[t]?0:1;b.setAttribute("aria-pressed",evOn[t]?"true":"false");show(sel)};EVB.appendChild(b)});
@@ -899,7 +902,7 @@ resize();Object.assign(view,fitAll());overview();
 {const h=location.hash.slice(1),g=GROUPS.find(g=>g.id.toLowerCase()===h);if(g)setTimeout(()=>select(byId[g.id]),60)}
 {let last=performance.now();
  (function tick(t){const dt=Math.min(50,t-last);last=t;
-  if(moving){T+=dt;rot+=dt*.000014;if(!sel&&!hov&&!ptrs.size)spin+=dt*.00002;
+  T+=dt;if(moving){rot+=dt*.000014;if(!sel&&!hov&&!ptrs.size)spin+=dt*.00002;
     if(!shoot&&Math.random()<dt*.0004){const a=Math.random()*6.283;shoot={t:T,x:Math.random()*W,y:Math.random()*H*.6,dx:Math.cos(a)*260,dy:Math.abs(Math.sin(a))*160+40}}}
   if(spinHome||!moving){const tg=Math.round(spin/6.2832)*6.2832;spin+=(tg-spin)*(1-Math.pow(.003,dt/1000*1.6))}
   if(fly){const s=1-Math.pow(.0025,dt/1000*1.6);view.x+=(fly.x-view.x)*s;view.y+=(fly.y-view.y)*s;view.k+=(fly.k-view.k)*s;
