@@ -3,6 +3,7 @@
 <meta name="author" content="강철민">
 <meta name="description" content="X-AI 역량(AI 협업역량) 은하 관계도 — 역량군·세부역량과 2022 개정 교육과정·NCS·국가기술자격·현장 사례의 연결 (제작 강철민)">
 <style>:root{color-scheme:dark;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap">
 </head><body>
 <title>X-AI 역량 은하</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -26,7 +27,7 @@ header{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;
   padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   background:linear-gradient(var(--void) 45%,transparent);pointer-events:none}
 header>*{pointer-events:auto}
-#credit{font:500 12px var(--sans);color:var(--ink3)}#credit #vc:not(:empty)::before{content:" · "}
+#credit{font:500 12px var(--sans);color:var(--ink3)}#credit .brush{font-family:"Nanum Brush Script",cursive;font-size:22px;color:var(--ink2);letter-spacing:.02em;line-height:1}#credit #vc:not(:empty)::before{content:" · "}
 @media (min-width:761px){header{right:calc(max(16px,env(safe-area-inset-right,0px)) + 420px);background:none}body.pc header{right:60px}#clusters,#evs{flex-basis:100%}#evs::before{content:"연결 근거";font:600 11px var(--sans);color:var(--ink3);letter-spacing:.06em;margin-right:4px}}
 h1{font-size:17px;font-weight:700;letter-spacing:.02em;margin:0;white-space:nowrap}
 h1 small{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:6px;letter-spacing:.08em}
@@ -106,7 +107,7 @@ ul.plain li{margin:3px 0}
 
 <canvas id="sky" aria-label="X-AI 역량 별자리 은하와 정규교육과정 연계 관계도"></canvas>
 <header id="hd">
-  <h1>X-AI 역량 은하<small>2026.11.25</small></h1><span id="credit">제작 강철민<span id="vc"></span></span>
+  <h1>X-AI 역량 은하<small>2026.11.25</small></h1><span id="credit"><span class="brush">제작 강철민</span><span id="vc"></span></span>
   <button class="chip" id="ftog" aria-expanded="false">필터</button>
   <input id="q" type="search" list="names" placeholder="별 찾기" aria-label="별 찾기">
   <datalist id="names"></datalist>
