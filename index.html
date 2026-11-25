@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="X-AI 역량(AI 협업역량) 은하 관계도 — 역량군·세부역량과 2022 개정 교육과정·NCS·국가기술자격·현장 사례의 연결">
+<meta name="author" content="강철민">
+<meta name="description" content="X-AI 역량(AI 협업역량) 은하 관계도 — 역량군·세부역량과 2022 개정 교육과정·NCS·국가기술자격·현장 사례의 연결 (제작 강철민)">
 <style>:root{color-scheme:dark;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>
 <title>X-AI 역량 은하</title>
@@ -25,6 +26,8 @@ header{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:5;
   padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   background:linear-gradient(var(--void) 45%,transparent);pointer-events:none}
 header>*{pointer-events:auto}
+#credit{font:500 12px var(--sans);color:var(--ink3)}#credit #vc:not(:empty)::before{content:" · "}
+@media (min-width:761px){header{right:calc(max(16px,env(safe-area-inset-right,0px)) + 420px);background:none}body.pc header{right:60px}#clusters,#evs{flex-basis:100%}#evs::before{content:"연결 근거";font:600 11px var(--sans);color:var(--ink3);letter-spacing:.06em;margin-right:4px}}
 h1{font-size:17px;font-weight:700;letter-spacing:.02em;margin:0;white-space:nowrap}
 h1 small{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:6px;letter-spacing:.08em}
 .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -103,7 +106,7 @@ ul.plain li{margin:3px 0}
 
 <canvas id="sky" aria-label="X-AI 역량 별자리 은하와 정규교육과정 연계 관계도"></canvas>
 <header id="hd">
-  <h1>X-AI 역량 은하<small>공개본 · 2026.11.25</small></h1>
+  <h1>X-AI 역량 은하<small>2026.11.25</small></h1><span id="credit">제작 강철민<span id="vc"></span></span>
   <button class="chip" id="ftog" aria-expanded="false">필터</button>
   <input id="q" type="search" list="names" placeholder="별 찾기" aria-label="별 찾기">
   <datalist id="names"></datalist>
@@ -731,8 +734,8 @@ function wrap(html,title,sub){P.classList.remove("open");
 function overview(){const subs=N.filter(n=>n.kind==="sub"),gaps=subs.filter(n=>n.ext===0),cnt={c:0,i:0,p:0,x:0};E.forEach(e=>{if(cnt[e.t]!=null)cnt[e.t]++});
   wrap(`<div class="kind">관계도 안내</div><h2>X-AI 역량과 정규교육과정</h2>
   <p>다섯 역량군이 각각 하나의 별자리를 이룹니다. 밝은 별은 세부역량 23개, 별자리 둘레의 작은 별은 하위능력 74개입니다. 바깥에는 2022 개정 교육과정·NCS·국가기술자격·기계 직무 사례 등의 연계 요소가 연결된 역량 가까이에 놓여 있습니다. 처음에는 역량만 밝게 보이고 연결선은 꺼져 있습니다. 위쪽 ‘연결 켜기’에서 자료를 켜면 그 자료와의 연결선이 나타나며, 역량 별을 눌러도 켜 둔 자료와의 연결만 보입니다. 연계 요소 별을 직접 누르면 그 별의 연결이 보입니다.</p>
-  <h3>역량군 · 5</h3><div class="figs">${GROUPS.map(g=>`<button data-go="${g.id}">${swatch(g)}<span>${g.n}<br><small>${g.fig} · 세부 ${g.subs.length} · 하위 ${g.subs.reduce((s,x)=>s+x.lows.length,0)}</small></span></button>`).join("")}</div>
   <h3>은하 구성</h3><div class="figs"><button data-go="CORE"><span class="dot" style="background:var(--gold)"></span><span>X-AI 역량(AI 협업역량)<br><small>이 은하의 중심 · 정의·구성·용어</small></span></button><button data-go="XAI"><span class="dot" style="background:#aaf0ff"></span><span>설명 가능한 인공지능(XAI)<br><small>X-AI와 다른 개념 · 바깥의 비교 은하</small></span></button></div>
+  <h3>X-AI 역량군 · 5</h3><div class="figs">${GROUPS.map(g=>`<button data-go="${g.id}">${swatch(g)}<span>${g.n}<br><small>${g.fig} · 세부 ${g.subs.length} · 하위 ${g.subs.reduce((s,x)=>s+x.lows.length,0)}</small></span></button>`).join("")}</div>
   <h3>연결 근거 구분</h3><div class="legend">
    <span class="sw" style="border-color:#7ee2b0"></span><span>확인 — 출처에서 확인한 사실 (${cnt.c})</span>
    <span class="sw" style="border-top-style:dashed;border-color:#c4b5fd"></span><span>해석 — 연구자 해석에 따른 연결 (${cnt.i})</span>
@@ -903,4 +906,13 @@ resize();Object.assign(view,fitAll());overview();
   draw();requestAnimationFrame(tick)})(last)}
 </script>
 
+<script>
+(async()=>{const el=document.getElementById("vc");if(!el)return;const B="https://countapi.mileshilliard.com/api/v1/",K="kcmjj371-xai-galaxy",
+ d=new Date(Date.now()+9*3600e3).toISOString().slice(0,10).replace(/-/g,""),TK=K+"-d"+d,TT=K+"-total";
+ let seen=false;try{seen=localStorage.getItem("xg-seen")===d}catch(e){}
+ const call=async(op,k)=>{try{const r=await fetch(B+op+"/"+k);if(!r.ok)return op==="get"?0:null;const j=await r.json();return j.value}catch(e){return null}};
+ const [t,a]=await Promise.all([call(seen?"get":"hit",TK),call(seen?"get":"hit",TT)]);
+ if(!seen){try{localStorage.setItem("xg-seen",d)}catch(e){}}
+ if(t!=null&&a!=null)el.textContent=`오늘 ${Number(t).toLocaleString()} · 누적 ${Number(a).toLocaleString()}`})();
+</script>
 </body></html>
