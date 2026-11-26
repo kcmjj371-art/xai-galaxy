@@ -32,6 +32,8 @@ header>*{pointer-events:auto}
 h1{font-size:17px;font-weight:700;letter-spacing:.02em;margin:0;white-space:nowrap}
 h1 small{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:6px;letter-spacing:.08em}
 .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#ctrl{display:contents}
+@media (min-width:761px){#ctrl{display:flex;flex-direction:column;gap:8px;position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 10px);right:calc(max(16px,env(safe-area-inset-right,0px)) + 436px);transform:scale(.6);transform-origin:top right;width:max-content;max-width:560px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--panel) 82%,transparent);backdrop-filter:blur(8px)}body.pc #ctrl{right:60px}}
 #clusters{flex-direction:column;align-items:flex-start;gap:4px}#clusters>.tlab{margin-bottom:-2px;align-self:flex-start}.crow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.crow>.tlab{min-width:86px;font-weight:500}
 .chip{font:500 12px var(--sans);color:var(--ink2);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .chip[aria-pressed="false"]{opacity:.55}.chip[aria-pressed="true"]{border-color:var(--x4);color:var(--ink)}.tlab{font:600 11px var(--sans);color:var(--ink3);letter-spacing:.06em;align-self:center;margin-right:2px}
@@ -111,8 +113,8 @@ ul.plain li{margin:3px 0}
   <button class="chip" id="ftog" aria-expanded="false">필터</button>
   <input id="q" type="search" list="names" placeholder="별 찾기" aria-label="별 찾기">
   <datalist id="names"></datalist>
-  <div class="tools" id="clusters"></div>
-  <div class="tools" id="evs"></div>
+  <div id="ctrl"><div class="tools" id="clusters"></div>
+  <div class="tools" id="evs"></div></div>
 </header>
 <aside id="panel" aria-live="polite"></aside><button id="ptog" aria-expanded="true" title="설명 접기">›</button>
 <div class="zoom">
@@ -418,7 +420,7 @@ let W=0,H=0,DPR=1,view={x:0,y:0,k:.5},sel=null,hov=null,rot=0,spin=0,T=0,moving=
 let lineOn=false;const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=1});
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let pcol=false;const panelW=()=>innerWidth>760?(pcol?40:366):0,mob=()=>innerWidth<=760;
-const hdBottom=()=>document.getElementById("hd").getBoundingClientRect().bottom;
+const hdBottom=()=>{let y=document.getElementById("hd").getBoundingClientRect().bottom;const c=document.getElementById("ctrl");if(c&&innerWidth>760){const r=c.getBoundingClientRect();if(r.height)y=Math.max(y,r.bottom)}return y};
 let wide=false;function fitAll(){const pw=panelW(),top=hdBottom()+4,ah=(mob()?H-84:H-16)-top,aw=W-pw-24;const k=Math.max(.16,Math.min(aw,ah)/(wide?2250:(mob()?1750:1850)));return {k,x:(W-pw)/2,y:top+ah/2}}
 function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
 const rotW=(x,y)=>{const c=Math.cos(spin),s=Math.sin(spin);return [x*c-y*s,x*s+y*c]};
