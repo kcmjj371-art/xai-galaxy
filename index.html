@@ -33,7 +33,7 @@ h1{font-size:17px;font-weight:700;letter-spacing:.02em;margin:0;white-space:nowr
 h1 small{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:6px;letter-spacing:.08em}
 .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 #ctrl{display:contents}
-@media (min-width:761px){#ctrl{display:flex;flex-direction:column;gap:8px;position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 10px);right:calc(max(16px,env(safe-area-inset-right,0px)) + 436px);transform:scale(.6);transform-origin:top right;width:max-content;max-width:560px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--panel) 82%,transparent);backdrop-filter:blur(8px)}body.pc #ctrl{right:60px}}
+@media (min-width:761px){#ctrl{display:flex;flex-direction:column;gap:8px;position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 10px);right:calc(max(16px,env(safe-area-inset-right,0px)) + 436px);transform:scale(.6);transform-origin:top right;width:max-content;max-width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--panel) 82%,transparent);backdrop-filter:blur(8px)}body.pc #ctrl{right:60px}#ctrl .crow{flex-direction:column;align-items:stretch;align-self:stretch;gap:5px}#ctrl .crow>.tlab{min-width:0;margin-top:4px}#ctrl .chip,#ctrl button{text-align:left;width:100%}#ctrl .tlab{align-self:flex-start}#evs{flex-direction:column;align-items:stretch}#evs::before{margin:4px 0 0}#credit #vc{position:fixed;z-index:7;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(16px,env(safe-area-inset-right,0px));font-size:12px}#credit #vc:not(:empty)::before{content:none}}
 #clusters{flex-direction:column;align-items:flex-start;gap:4px}#clusters>.tlab{margin-bottom:-2px;align-self:flex-start}.crow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.crow>.tlab{min-width:86px;font-weight:500}
 .chip{font:500 12px var(--sans);color:var(--ink2);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .chip[aria-pressed="false"]{opacity:.55}.chip[aria-pressed="true"]{border-color:var(--x4);color:var(--ink)}.tlab{font:600 11px var(--sans);color:var(--ink3);letter-spacing:.06em;align-self:center;margin-right:2px}
@@ -420,8 +420,8 @@ let W=0,H=0,DPR=1,view={x:0,y:0,k:.5},sel=null,hov=null,rot=0,spin=0,T=0,moving=
 let lineOn=false;const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=1});
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let pcol=false;const panelW=()=>innerWidth>760?(pcol?40:366):0,mob=()=>innerWidth<=760;
-const hdBottom=()=>{let y=document.getElementById("hd").getBoundingClientRect().bottom;const c=document.getElementById("ctrl");if(c&&innerWidth>760){const r=c.getBoundingClientRect();if(r.height)y=Math.max(y,r.bottom)}return y};
-let wide=false;function fitAll(){const pw=panelW(),top=hdBottom()+4,ah=(mob()?H-84:H-16)-top,aw=W-pw-24;const k=Math.max(.16,Math.min(aw,ah)/(wide?2250:(mob()?1750:1850)));return {k,x:(W-pw)/2,y:top+ah/2}}
+const hdBottom=()=>document.getElementById("hd").getBoundingClientRect().bottom;const ctrlW=()=>{const c=document.getElementById("ctrl");if(!c||innerWidth<=760)return 0;const r=c.getBoundingClientRect();return r.width?r.width+12:0};
+let wide=false;function fitAll(){const pw=panelW(),top=hdBottom()+4,ah=(mob()?H-84:H-16)-top,cw=ctrlW(),aw=W-pw-cw-24;const k=Math.max(.16,Math.min(aw,ah)/(wide?2250:(mob()?1750:1850)));return {k,x:(W-pw-cw)/2,y:top+ah/2}}
 function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
 const rotW=(x,y)=>{const c=Math.cos(spin),s=Math.sin(spin);return [x*c-y*s,x*s+y*c]};
 const toS=(x,y)=>{const [a,b]=rotW(x,y);return [view.x+a*view.k,view.y+b*view.k]};
@@ -683,7 +683,7 @@ function draw(){
     else if(kind==="group"){al="center";const gg=GROUPS.find(x=>x.id===n.id),P=figP(gg),b=gg.bb,cs=[P(b[0],b[1]),P(b[2],b[1]),P(b[0],b[3]),P(b[2],b[3])];lx=P(0,0)[0];ly=Math.min(...cs.map(q=>q[1]))-12}
     else{const ref=kind==="low"?byId[n.parent]:kind==="sub"?byId[n.grp]:{sx:cx,sy:cy};const right=n.sx>=ref.sx;al=right?"left":"right";lx=n.sx+(right?n.sr+6:-(n.sr+6))}
     let bx=al==="center"?lx-w/2:al==="left"?lx:lx-w;
-    if(bx<4){lx+=4-bx;bx=4}else if(bx+w>W-panelW()-4&&n.sx<W-panelW()){const sh=bx+w-(W-panelW()-4);lx-=sh;bx-=sh}
+    if(bx<4){lx+=4-bx;bx=4}else{const RW=W-panelW()-ctrlW();if(bx+w>RW-4&&n.sx<RW){const sh=bx+w-(RW-4);lx-=sh;bx-=sh}}
     let ok=false,off=0;const offs=kind==="core"?[0]:kind==="group"||kind==="hub"||kind==="base"||kind==="xai"?[0,-14,14,-28,28]:[0,-12,12,-24,24];
     for(const o of offs){const r=[bx-3,ly+o-fs*.62,w+6,fs*1.24];if(!hit(r)){placed.push(r);off=o;ok=true;break}}
     if(!ok){if(!always)continue;placed.push([bx-3,ly-fs*.62,w+6,fs*1.24])}ly+=off;ctx.textAlign=al;
