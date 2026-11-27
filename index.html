@@ -33,7 +33,7 @@ h1{font-size:17px;font-weight:700;letter-spacing:.02em;margin:0;white-space:nowr
 h1 small{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:6px;letter-spacing:.08em}
 .tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 #ctrl{display:contents}
-@media (min-width:761px){#ctrl{display:flex;flex-direction:column;gap:8px;position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 10px);right:calc(max(16px,env(safe-area-inset-right,0px)) + 436px);transform:scale(.6);transform-origin:top right;width:max-content;max-width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--panel) 82%,transparent);backdrop-filter:blur(8px)}body.pc #ctrl{right:60px}#ctrl .crow{flex-direction:column;align-items:stretch;align-self:stretch;gap:5px}#ctrl .crow>.tlab{min-width:0;margin-top:4px}#ctrl .chip,#ctrl button{text-align:left;width:100%}#ctrl .tlab{align-self:flex-start}#evs{flex-direction:column;align-items:stretch}#evs::before{margin:4px 0 0}#credit #vc{position:fixed;z-index:7;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(16px,env(safe-area-inset-right,0px));font-size:12px}#credit #vc:not(:empty)::before{content:none}}
+@media (min-width:761px){#ctrl{display:flex;flex-direction:column;gap:6px;position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 34px);right:max(16px,env(safe-area-inset-right,0px));transform:scale(.6);transform-origin:top right;width:646px;box-sizing:border-box;padding:10px 14px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--panel) 82%,transparent);backdrop-filter:blur(8px)}#credit #vc{position:fixed;z-index:7;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(16px,env(safe-area-inset-right,0px));font-size:12px}#credit #vc:not(:empty)::before{content:none}}
 #clusters{flex-direction:column;align-items:flex-start;gap:4px}#clusters>.tlab{margin-bottom:-2px;align-self:flex-start}.crow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.crow>.tlab{min-width:86px;font-weight:500}
 .chip{font:500 12px var(--sans);color:var(--ink2);background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .chip[aria-pressed="false"]{opacity:.55}.chip[aria-pressed="true"]{border-color:var(--x4);color:var(--ink)}.tlab{font:600 11px var(--sans);color:var(--ink3);letter-spacing:.06em;align-self:center;margin-right:2px}
@@ -42,11 +42,11 @@ h1 small{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:6p
 .sw{width:18px;height:0;border-top:2px solid var(--ink2);display:inline-block}
 #q{font:13px var(--sans);background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:5px 12px;width:170px}
 #ftog{display:none}
-#panel{position:fixed;z-index:6;right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:350px;
+#panel{position:fixed;z-index:6;right:max(16px,env(safe-area-inset-right,0px));top:var(--pt,calc(env(safe-area-inset-top,0px) + 96px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:350px;
   background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:auto;padding:18px 18px 22px;backdrop-filter:blur(6px)}
 #panel{transition:width .25s ease,padding .25s ease,opacity .2s}
 body.pc #panel{width:0;padding:0;opacity:0;border-width:0;pointer-events:none}
-#ptog{position:fixed;z-index:7;top:calc(env(safe-area-inset-top,0px) + 106px);right:calc(max(16px,env(safe-area-inset-right,0px)) + 392px);width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 16px/1 var(--sans);cursor:pointer;transition:right .25s ease;backdrop-filter:blur(6px)}
+#ptog{position:fixed;z-index:7;top:calc(var(--pt,calc(env(safe-area-inset-top,0px) + 96px)) + 10px);right:calc(max(16px,env(safe-area-inset-right,0px)) + 392px);width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:600 16px/1 var(--sans);cursor:pointer;transition:right .25s ease;backdrop-filter:blur(6px)}
 body.pc #ptog{right:max(16px,env(safe-area-inset-right,0px))}
 @media (max-width:760px){#ptog{display:none}}
 #panel h2{font-size:18px;margin:4px 0 6px;text-wrap:balance}
@@ -420,7 +420,7 @@ let W=0,H=0,DPR=1,view={x:0,y:0,k:.5},sel=null,hov=null,rot=0,spin=0,T=0,moving=
 let lineOn=false;const vis={},act={},evOn={c:1,i:1,p:1,x:1};CLUSTERS.forEach(c=>{vis[c.id]=1;act[c.id]=1});
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 let pcol=false;const panelW=()=>innerWidth>760?(pcol?40:366):0,mob=()=>innerWidth<=760;
-const hdBottom=()=>document.getElementById("hd").getBoundingClientRect().bottom;const ctrlW=()=>{const c=document.getElementById("ctrl");if(!c||innerWidth<=760)return 0;const r=c.getBoundingClientRect();return r.width?r.width+12:0};
+const hdBottom=()=>document.getElementById("hd").getBoundingClientRect().bottom;const ctrlW=()=>0;function dockCtrl(){const c=document.getElementById("ctrl"),s=document.documentElement.style;if(!c||innerWidth<=760){s.removeProperty("--pt");return}const r=c.getBoundingClientRect();if(r.height)s.setProperty("--pt",Math.round(r.bottom+10)+"px")}addEventListener("resize",dockCtrl);addEventListener("load",dockCtrl);
 let wide=false;function fitAll(){const pw=panelW(),top=hdBottom()+4,ah=(mob()?H-84:H-16)-top,cw=ctrlW(),aw=W-pw-cw-24;const k=Math.max(.16,Math.min(aw,ah)/(wide?2250:(mob()?1750:1850)));return {k,x:(W-pw-cw)/2,y:top+ah/2}}
 function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR}
 const rotW=(x,y)=>{const c=Math.cos(spin),s=Math.sin(spin);return [x*c-y*s,x*s+y*c]};
@@ -862,6 +862,7 @@ let allSync=()=>{};
  const l1=document.createElement("button"),l0=document.createElement("button");l1.className=l0.className="chip";l1.id="lnOn";l0.id="lnOff";l1.textContent="선 켜기";l0.textContent="선 끄기";l1.title="연결선을 보입니다";l0.title="별은 그대로 두고 연결선만 숨깁니다";
  const lset=v=>{lineOn=v;l1.setAttribute("aria-pressed",v?"true":"false");l0.setAttribute("aria-pressed",v?"false":"true")};l1.onclick=()=>lset(true);l0.onclick=()=>lset(false);lset(false);
  cr.appendChild(l1);cr.appendChild(l0);CL.appendChild(cr)}
+requestAnimationFrame(dockCtrl);
 const EVB=document.getElementById("evs");
 ["c","i","p","x"].forEach(t=>{const b=document.createElement("button");b.className="chip";b.setAttribute("aria-pressed","true");b.title=EVD[t];
   b.innerHTML=`<span class="ev ev-${t}" style="padding:1px 6px">${EVN[t]}</span>`;b.onclick=()=>{evOn[t]=evOn[t]?0:1;b.setAttribute("aria-pressed",evOn[t]?"true":"false");show(sel)};EVB.appendChild(b)});
