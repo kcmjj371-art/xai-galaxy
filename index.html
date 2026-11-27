@@ -853,9 +853,11 @@ const CROW={};CGRP.forEach(([nm,ids])=>{const r=document.createElement("div");r.
 CLUSTERS.forEach(c=>{const b=document.createElement("button");b.className="chip";b.setAttribute("aria-pressed","true");b.id="f-"+c.id;
   b.innerHTML=`<span class="dot" style="background:${c.c}"></span>${esc(c.n)}`;
   b.setAttribute("aria-pressed",act[c.id]?"true":"false");b.title="눌러서 이 자료와 역량의 연결선을 켜고 끕니다";
-  b.onclick=()=>{act[c.id]=act[c.id]?0:1;b.setAttribute("aria-pressed",act[c.id]?"true":"false");show(sel)};(CROW[c.id]||CL).appendChild(b)});
+  b.onclick=()=>{act[c.id]=act[c.id]?0:1;b.setAttribute("aria-pressed",act[c.id]?"true":"false");allSync();show(sel)};(CROW[c.id]||CL).appendChild(b)});
+let allSync=()=>{};
 {const lb=document.createElement("span");lb.className="tlab";lb.textContent="연결 켜기";CL.prepend(lb);
- const all=document.createElement("button");all.className="chip";all.textContent="모두 끄기";all.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=0;document.getElementById("f-"+c.id).setAttribute("aria-pressed","false")});show(sel)};const on=document.createElement("button");on.className="chip";on.textContent="모두 켜기";on.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=1;document.getElementById("f-"+c.id).setAttribute("aria-pressed","true")});show(sel)};
+ const all=document.createElement("button");all.className="chip";all.textContent="모두 끄기";all.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=0;document.getElementById("f-"+c.id).setAttribute("aria-pressed","false")});allSync();show(sel)};const on=document.createElement("button");on.className="chip";on.textContent="모두 켜기";on.onclick=()=>{CLUSTERS.forEach(c=>{act[c.id]=1;document.getElementById("f-"+c.id).setAttribute("aria-pressed","true")});allSync();show(sel)};on.id="allOn";all.id="allOff";on.title="모든 자료를 켭니다";all.title="모든 자료를 끕니다";
+ allSync=()=>{const ids=CLUSTERS.map(c=>c.id),a=ids.every(i=>act[i]),z=ids.every(i=>!act[i]);on.setAttribute("aria-pressed",a?"true":"false");all.setAttribute("aria-pressed",z?"true":"false")};allSync();
  const cr=document.createElement("div");cr.className="crow";cr.innerHTML='<span class="tlab">전체</span>';cr.appendChild(on);cr.appendChild(all);
  const l1=document.createElement("button"),l0=document.createElement("button");l1.className=l0.className="chip";l1.id="lnOn";l0.id="lnOff";l1.textContent="선 켜기";l0.textContent="선 끄기";l1.title="연결선을 보입니다";l0.title="별은 그대로 두고 연결선만 숨깁니다";
  const lset=v=>{lineOn=v;l1.setAttribute("aria-pressed",v?"true":"false");l0.setAttribute("aria-pressed",v?"false":"true")};l1.onclick=()=>lset(true);l0.onclick=()=>lset(false);lset(false);
