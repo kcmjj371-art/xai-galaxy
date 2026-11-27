@@ -106,6 +106,8 @@ ul.plain li{margin:3px 0}
   header.open~.zoom{display:none}
   #q{width:120px}
 }
+
+.tb.defs{margin:8px 0 12px}.tb.defs th{width:30%;white-space:nowrap;color:var(--ink);vertical-align:top}.tb.defs th small{display:block;font-weight:400;color:var(--ink3);font-size:11px;margin-top:2px}.tb.defs td .note{display:block;margin-top:4px}
 </style>
 
 <canvas id="sky" aria-label="X-AI 역량 별자리 은하와 정규교육과정 연계 관계도"></canvas>
@@ -753,7 +755,11 @@ function wrap(html,title,sub){P.classList.remove("open");
   P.innerHTML=`<div class="mini"><span><b>${title}</b><small>${sub}</small></span><button class="more" data-tog>자세히 보기</button><button class="less" data-tog>접기</button></div><div class="full">${html}</div>`;P.scrollTop=0}
 function overview(){const subs=N.filter(n=>n.kind==="sub"),gaps=subs.filter(n=>n.ext===0),cnt={c:0,i:0,p:0,x:0};E.forEach(e=>{if(cnt[e.t]!=null)cnt[e.t]++});
   wrap(`<div class="kind">관계도 안내</div><h2>X-AI 역량 은하</h2>
-  <p>X-AI 역량 은하는 AI 협업 직무에 새로 진입하는 사람에게 요구되는 X-AI 역량(AI 협업 직무 역량)의 구조와, 이 역량을 정규교육과정과 잇는 연계안을 하나의 은하로 나타낸 관계도입니다. 가운데의 X-AI 역량을 중심으로 배분·맞춤·조율·검증·책임의 다섯 역량군이 각각 하나의 별자리(나침반·톱니바퀴·저울·방패·등대)를 이룹니다. 별자리의 밝은 별은 세부역량 23개, 둘레의 작은 별은 하위능력 74개이며, 은하 아래쪽 둘레에는 X-AI 역량의 바탕이 되는 기반 역량 3개가 놓여 있습니다. 은하 바깥에는 2022 개정 교육과정, NCS, 국가기술자격, 기계 직무 AI 협업 사례의 연계 요소가 관련 역량 가까이에 놓여, X-AI 역량을 기존 직무 관련 과목과 어떻게 이어 가르칠 수 있는지 보여 줍니다.</p>
+  <table class="tb defs"><tbody>
+   <tr><th>X-AI</th><td>과업(X)과 결합된 AI와 사람이 역할을 나누어 협업 직무를 함께 수행하는 것<span class="note">AI의 판단 근거를 설명하는 기술인 설명 가능한 인공지능(XAI)과는 다른 용어입니다.</span></td></tr>
+   <tr><th>X-AI 역량<small>AI 협업 직무 역량</small></th><td>${esc(CORE_DEF.replace(/^X-AI 역량은\s*/,"").replace(/이다\.$/,""))}</td></tr>
+   <tr><th>X-AI 역량 은하</th><td>X-AI 역량의 구조와, 이 역량을 정규교육과정과 잇는 연계안을 하나의 은하로 나타낸 관계도</td></tr></tbody></table>
+  <p>가운데의 X-AI 역량을 중심으로 배분·맞춤·조율·검증·책임의 다섯 역량군이 각각 하나의 별자리(나침반·톱니바퀴·저울·방패·등대)를 이룹니다. 별자리의 밝은 별은 세부역량 23개, 둘레의 작은 별은 하위능력 74개이며, 은하 아래쪽 둘레에는 X-AI 역량의 바탕이 되는 기반 역량 3개가 놓여 있습니다. 은하 바깥에는 2022 개정 교육과정, NCS, 국가기술자격, 기계 직무 AI 협업 사례의 연계 요소가 관련 역량 가까이에 놓여, X-AI 역량을 기존 직무 관련 과목과 어떻게 이어 가르칠 수 있는지 보여 줍니다.</p>
   <p>처음에는 모든 자료가 켜져 있고 연결선은 꺼져 있습니다. ‘선 켜기’를 누르면 연계안이 선으로 나타나고, 위쪽 ‘연계안 켜기’에서 자료를 골라 켜고 끌 수 있습니다. 역량 별을 누르면 켜 둔 자료와의 연계안만, 연계 요소 별을 누르면 그 별의 연계안이 보입니다.</p>
   <h3>은하 구성</h3><div class="figs"><button data-go="CORE"><span class="dot" style="background:var(--gold)"></span><span>X-AI 역량(AI 협업 직무 역량)<br><small>이 은하의 중심 · 정의·구성·용어</small></span></button><button data-go="XAI"><span class="dot" style="background:#aaf0ff"></span><span>설명 가능한 인공지능(XAI)<br><small>X-AI와 다른 개념 · 바깥의 비교 은하</small></span></button></div>
   <h3>X-AI 역량군 · 5</h3><div class="figs">${GROUPS.map(g=>`<button data-go="${g.id}">${swatch(g)}<span>${g.n}<br><small>${g.fig} · 세부 ${g.subs.length} · 하위 ${g.subs.reduce((s,x)=>s+x.lows.length,0)}</small></span></button>`).join("")}</div>
