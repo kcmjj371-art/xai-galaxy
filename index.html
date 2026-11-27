@@ -916,13 +916,13 @@ resize();Object.assign(view,fitAll());overview();
 </script>
 
 <script>
-(async()=>{const el=document.getElementById("vc");if(!el)return;const B="https://countapi.mileshilliard.com/api/v1/",K="kcmjj371-xai-galaxy",
+(async()=>{const el=document.getElementById("vc");if(!el)return;const B="https://countapi.mileshilliard.com/api/v1/",K="kcmjj371-xai-galaxy-r2",
  d=new Date(Date.now()+9*3600e3).toISOString().slice(0,10).replace(/-/g,""),TK=K+"-d"+d,TT=K+"-total";
- let seen=false;try{seen=localStorage.getItem("xg-seen")===d}catch(e){}
+ let seen=false;try{seen=localStorage.getItem("xg-seen-r2")===d}catch(e){}
  const once=async(op,k)=>{try{const r=await fetch(B+op+"/"+k,{cache:"no-store"});if(r.status===404&&op==="get")return 0;if(!r.ok)return null;const j=await r.json();return j.value}catch(e){return null}};
  const call=async(op,k)=>{let v=await once(op,k);for(let i=0;v==null&&i<2;i++){await new Promise(r=>setTimeout(r,800*(i+1)));v=await once(op,k)}return v};
  const op=seen?"get":"hit",t=await call(op,TK),a=await call(op,TT);
- if(!seen&&t!=null){try{localStorage.setItem("xg-seen",d)}catch(e){}}
+ if(!seen&&t!=null){try{localStorage.setItem("xg-seen-r2",d)}catch(e){}}
  const parts=[];if(t!=null)parts.push(`오늘 ${Number(t).toLocaleString()}`);if(a!=null)parts.push(`누적 ${Number(a).toLocaleString()}`);el.textContent=parts.join(" · ")})();
 </script>
 </body></html>
